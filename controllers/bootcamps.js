@@ -3,7 +3,7 @@
 // @access Public
 
 exports.getBootcamps=(req,res)=>{
-    res.status(200).json({success:true,msg:"Get All bootcamps"});
+    res.status(200).json({success:true,msg:"Get All bootcamps",hello:req.hello});
 }
 
 // @desc get Single Bootcamp
