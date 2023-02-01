@@ -46,7 +46,7 @@ const BootcampSchema = mongoose.Schema({
     type: String,
     required: [true, 'Please provide an address'],
   },
-  averageCost: String,
+  averageCost: Number,
   averageRating: {
     type: Number,
     min: [1, 'Min Average Rating is 1'],
@@ -101,11 +101,27 @@ const BootcampSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+},{
+  toJSON:{virtuals:true},
+  toObject:{virtuals:true}
 });
+
+
+BootcampSchema.virtual('courses',{
+  ref:'Course',
+  localField:'_id',
+  foreignField:'bootcamp'
+})
 
 // create slug from name
 BootcampSchema.pre("save",function(next) {
     this.slug=slugify(this.name,{lower:true});
+    next();
+})
+
+BootcampSchema.pre('remove',async function(next) {
+  console.log(`Courses are about to be removed from the bootcamp ${this._id}`)
+    await this.model('Course').deleteMany({bootcamp:this._id})
     next();
 })
 

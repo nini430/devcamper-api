@@ -2,13 +2,16 @@ const express=require("express")
 const dotenv=require("dotenv")
 const morgan=require("morgan");
 const colors=require("colors");
+const path=require('path')
 const errorHandler=require("./middleware/error")
 const connectDB=require("./config/db")
+const fileupload=require('express-fileupload')
 
 dotenv.config({path:"./config/config.env"});
 // routes
 
 const bootcamps=require("./routes/bootcamps")
+const courses=require("./routes/courses")
 
 
 
@@ -25,7 +28,12 @@ app.use(express.json())
 
 app.use(morgan("dev"));
 
+app.use(express.static(path.join(__dirname,'public')))
+
+app.use(fileupload())
+
 app.use("/api/v1/bootcamps",bootcamps);
+app.use("/api/v1/courses",courses);
 
 app.use(errorHandler);
 
